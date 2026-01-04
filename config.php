@@ -5,15 +5,22 @@ $host = getenv("MYSQLHOST");
 $user = getenv("MYSQLUSER");
 $pass = getenv("MYSQLPASSWORD");
 $db   = getenv("MYSQLDATABASE");
-$port = getenv("MYSQLPORT") ?: 3306;
+$port = getenv("MYSQLPORT");
 
-$conn = new mysqli($host, $user, $pass, $db, (int)$port);
-
-if ($conn->connect_error) {
+if (!$host || !$user || !$pass || !$db) {
     echo json_encode([
-        "success" => 0,
-        "message" => "Connection failed: " . $conn->connect_error
+        "success" => false,
+        "message" => "Missing environment variables"
     ]);
     exit;
 }
-?>
+
+$conn = new mysqli($host, $user, $pass, $db, $port);
+
+if ($conn->connect_error) {
+    echo json_encode([
+        "success" => false,
+        "message" => $conn->connect_error
+    ]);
+    exit;
+}

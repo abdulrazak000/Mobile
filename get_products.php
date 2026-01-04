@@ -1,14 +1,15 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=UTF-8");
-
 require "config.php";
 
-$stmt = $conn->query("SELECT * FROM products");
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = $conn->query("SELECT * FROM products");
+
+$data = [];
+
+while ($row = $result->fetch_assoc()) {
+    $data[] = $row;
+}
 
 echo json_encode([
-    "success" => 1,
-    "data" => $products
+    "success" => true,
+    "data" => $data
 ]);
-?>
