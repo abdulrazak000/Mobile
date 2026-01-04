@@ -26,30 +26,18 @@ if ($name === "" || $price <= 0) {
     exit;
 }
 
-$stmt = $conn->prepare("INSERT INTO products (name, price, discount, tax) VALUES (?, ?, ?, ?)");
+try {
+    $stmt = $conn->prepare("INSERT INTO products (name, price, discount, tax) VALUES (?, ?, ?, ?)");
+    $stmt->execute([$name, $price, $discount, $tax]);
 
-if (!$stmt) {
+    echo json_encode([
+        "success" => 1,
+        "message" => "Product added successfully"
+    ]);
+} catch (PDOException $e) {
     echo json_encode([
         "success" => 0,
-        "message" => "Prepare failed: " . $conn->error
+        "message" => "Insert failed: " . $e->getMessage()
     ]);
-    exit;
 }
-
-$stmt->bind_param("sddd", $name, $price, $discount, $tax);
-
-$success = $stmt->execute();
-
-if (!$success) {
-    echo json_encode([
-        "success" => 0,
-        "message" => "Execute failed: " . $stmt->error
-    ]);
-    exit;
-}
-
-echo json_encode([
-    "success" => 1,
-    "message" => "Product added successfully"
-]);
 ?>
