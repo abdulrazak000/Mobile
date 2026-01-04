@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require "config.php";
 
 $data = json_decode(file_get_contents("php://input"), true);
-
 $id = (int)($data["id"] ?? 0);
 
 if ($id <= 0) {
@@ -24,26 +23,9 @@ if ($id <= 0) {
 }
 
 $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
-if (!$stmt) {
-    echo json_encode([
-        "success" => 0,
-        "message" => "Prepare failed: " . $conn->error
-    ]);
-    exit;
-}
-
 $stmt->bind_param("i", $id);
-$success = $stmt->execute();
 
-if (!$success) {
-    echo json_encode([
-        "success" => 0,
-        "message" => "Execute failed: " . $stmt->error
-    ]);
-    exit;
-}
-
-if ($stmt->affected_rows > 0) {
+if ($stmt->execute() && $stmt->affected_rows > 0) {
     echo json_encode([
         "success" => 1,
         "message" => "Product deleted successfully"

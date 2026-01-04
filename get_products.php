@@ -4,18 +4,15 @@ header("Content-Type: application/json; charset=UTF-8");
 
 require "config.php";
 
-try {
-    $stmt = $conn->query("SELECT * FROM products");
-    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = $conn->query("SELECT * FROM products");
 
-    echo json_encode([
-        "success" => 1,
-        "data" => $products
-    ]);
-} catch (PDOException $e) {
-    echo json_encode([
-        "success" => 0,
-        "message" => "Query failed: " . $e->getMessage()
-    ]);
+$products = [];
+while ($row = $result->fetch_assoc()) {
+    $products[] = $row;
 }
+
+echo json_encode([
+    "success" => 1,
+    "data" => $products
+]);
 ?>
