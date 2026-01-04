@@ -1,20 +1,12 @@
 <?php
 header("Content-Type: application/json; charset=UTF-8");
 
-$host = getenv("MYSQLHOST");
-$user = getenv("MYSQLUSER");
-$pass = getenv("MYSQLPASSWORD");
-$db   = getenv("MYSQLDATABASE");
-
-if (!$host || !$user || !$pass || !$db) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Missing environment variables for database connection"
-    ]);
-    exit;
-}
-
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli(
+    getenv("MYSQLHOST"),
+    getenv("MYSQLUSER"),
+    getenv("MYSQLPASSWORD"),
+    getenv("MYSQLDATABASE")
+);
 
 if ($conn->connect_error) {
     echo json_encode([
