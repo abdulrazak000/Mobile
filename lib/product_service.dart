@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import 'product.dart';
 
 class ProductService {
-  static const String baseUrl = "https://web-production-3c4af.up.railway.app/get_products.php";
+  static const String baseUrl =
+      "https://web-production-3c4af.up.railway.app";
 
   Future<List<Product>> getProducts() async {
     try {
@@ -15,7 +16,11 @@ class ProductService {
       print("BODY: ${res.body}");
 
       if (res.statusCode == 200) {
-        final List data = jsonDecode(res.body);
+        final decoded = jsonDecode(res.body);
+
+
+        final List data = decoded["data"];
+
         return data.map((e) => Product.fromJson(e)).toList();
       } else {
         throw Exception("Server error");
@@ -46,9 +51,8 @@ class ProductService {
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         return data["success"] == true;
-      } else {
-        return false;
       }
+      return false;
     } catch (e) {
       print("ADD PRODUCT ERROR: $e");
       return false;
@@ -66,7 +70,11 @@ class ProductService {
       print("DELETE STATUS: ${res.statusCode}");
       print("DELETE BODY: ${res.body}");
 
-      return res.statusCode == 200;
+      if (res.statusCode == 200) {
+        final data = jsonDecode(res.body);
+        return data["success"] == true;
+      }
+      return false;
     } catch (e) {
       print("DELETE ERROR: $e");
       return false;
