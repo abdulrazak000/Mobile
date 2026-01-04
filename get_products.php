@@ -11,18 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require "config.php";
 
-$result = $conn->query("SELECT * FROM products");
-
-if (!$result) {
-    echo json_encode(["success" => false, "message" => $conn->error]);
-    exit;
+try {
+    $stmt = $conn->query("SELECT * FROM products");
+    $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($products);
+} catch (PDOException $e) {
+    echo json_encode(["success" => false, "message" => $e->getMessage()]);
 }
-
-$products = [];
-
-while ($row = $result->fetch_assoc()) {
-    $products[] = $row;
-}
-
-echo json_encode($products);
 ?>
