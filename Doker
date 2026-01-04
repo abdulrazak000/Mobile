@@ -1,5 +1,19 @@
 FROM php:8.2-apache
+
+# تثبيت المكتبات المطلوبة
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libzip-dev \
+    libonig-dev \
+    libxml2-dev \
+    default-mysql-client \
+    && docker-php-ext-install mysqli pdo pdo_mysql \
+    && a2enmod rewrite
+
+# نسخ الملفات إلى السيرفر
 COPY . /var/www/html/
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# تغيير الصلاحيات
 RUN chown -R www-data:www-data /var/www/html
+
 EXPOSE 80
