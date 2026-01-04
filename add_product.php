@@ -27,12 +27,7 @@ if ($name === "" || $price <= 0) {
 }
 
 $stmt = $conn->prepare("INSERT INTO products (name, price, discount, tax) VALUES (?, ?, ?, ?)");
-$stmt->bindValue(1, $name, PDO::PARAM_STR);
-$stmt->bindValue(2, $price);
-$stmt->bindValue(3, $discount);
-$stmt->bindValue(4, $tax);
-
-if ($stmt->execute()) {
+if ($stmt->execute([$name, $price, $discount, $tax])) {
     echo json_encode([
         "success" => 1,
         "message" => "Product added successfully"
@@ -40,7 +35,7 @@ if ($stmt->execute()) {
 } else {
     echo json_encode([
         "success" => 0,
-        "message" => "Error: " . implode(" | ", $stmt->errorInfo())
+        "message" => "Error adding product"
     ]);
 }
 ?>
