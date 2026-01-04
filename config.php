@@ -5,8 +5,9 @@ $host = getenv("MYSQLHOST");
 $user = getenv("MYSQLUSER");
 $pass = getenv("MYSQLPASSWORD");
 $db   = getenv("MYSQLDATABASE");
+$port = getenv("MYSQLPORT");
 
-if (!$host || !$user || !$db) {
+if (!$host || !$user || !$pass || !$db || !$port) {
     echo json_encode([
         "success" => false,
         "message" => "Missing environment variables for database connection"
@@ -14,7 +15,7 @@ if (!$host || !$user || !$db) {
     exit;
 }
 
-$conn = new mysqli($host, $user, $pass, $db);
+$conn = new mysqli($host, $user, $pass, $db, $port);
 
 if ($conn->connect_error) {
     echo json_encode([
