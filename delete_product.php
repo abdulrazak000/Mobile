@@ -14,9 +14,26 @@ require "config.php";
 $data = json_decode(file_get_contents("php://input"), true);
 $id = (int)($data["id"] ?? 0);
 
+if ($id <= 0) {
+    echo json_encode(["success" => false, "message" => "Invalid ID"]);
+    exit;
+}
+
 $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
+
+if (!$stmt) {
+    echo json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]);
+    exit;
+}
+
 $stmt->bind_param("i", $id);
 
 $success = $stmt->execute();
 
-echo json_encode(["success" => $success]);
+if (!$success) {
+    echo json_encode(["success" => false, "message" => "Execute failed: " . $stmt->error]);
+    exit;
+}
+
+echo json_encode(["success" => true]);
+?>

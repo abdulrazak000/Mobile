@@ -13,6 +13,11 @@ require "config.php";
 
 $result = $conn->query("SELECT * FROM products");
 
+if (!$result) {
+    echo json_encode(["success" => false, "message" => $conn->error]);
+    exit;
+}
+
 $products = [];
 
 while ($row = $result->fetch_assoc()) {
@@ -20,3 +25,4 @@ while ($row = $result->fetch_assoc()) {
 }
 
 echo json_encode($products);
+?>

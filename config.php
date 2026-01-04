@@ -11,7 +11,7 @@ $conn = new mysqli(
 if ($conn->connect_error) {
   echo json_encode([
     "success" => false,
-    "message" => "Database connection failed"
+    "message" => "Database connection failed" . $conn->connect_error
   ]);
   exit;
 }

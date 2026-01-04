@@ -1,6 +1,6 @@
 <?php
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Content-Type: application/json; charset=UTF-8");
 
@@ -19,16 +19,25 @@ $discount = (float)($data["discount"] ?? 0);
 $tax      = (float)($data["tax"] ?? 0);
 
 if ($name === "" || $price <= 0) {
-    echo json_encode(["success" => false]);
+    echo json_encode(["success" => false, "message" => "Invalid name or price"]);
     exit;
 }
 
-$stmt = $conn->prepare(
-    "INSERT INTO products (name, price, discount, tax)
-     VALUES (?, ?, ?, ?)"
-);
+$stmt = $conn->prepare("INSERT INTO products (name, price, discount, tax) VALUES (?, ?, ?, ?)");
+
+if (!$stmt) {
+    echo json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]);
+    exit;
+}
 
 $stmt->bind_param("sddd", $name, $price, $discount, $tax);
+
 $success = $stmt->execute();
 
-echo json_encode(["success" => $success]);
+if (!$success) {
+    echo json_encode(["success" => false, "message" => "Execute failed: " . $stmt->error]);
+    exit;
+}
+
+echo json_encode(["success" => true]);
+?>
