@@ -23,9 +23,10 @@ if ($id <= 0) {
 }
 
 $stmt = $conn->prepare("DELETE FROM products WHERE id = ?");
-$stmt->bind_param("i", $id);
+$stmt->bindValue(1, $id, PDO::PARAM_INT);
+$stmt->execute();
 
-if ($stmt->execute() && $stmt->affected_rows > 0) {
+if ($stmt->rowCount() > 0) {
     echo json_encode([
         "success" => 1,
         "message" => "Product deleted successfully"

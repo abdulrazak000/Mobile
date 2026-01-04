@@ -4,12 +4,8 @@ header("Content-Type: application/json; charset=UTF-8");
 
 require "config.php";
 
-$result = $conn->query("SELECT * FROM products");
-
-$products = [];
-while ($row = $result->fetch_assoc()) {
-    $products[] = $row;
-}
+$stmt = $conn->query("SELECT * FROM products");
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo json_encode([
     "success" => 1,
