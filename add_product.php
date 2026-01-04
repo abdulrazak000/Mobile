@@ -19,14 +19,20 @@ $discount = (float)($data["discount"] ?? 0);
 $tax      = (float)($data["tax"] ?? 0);
 
 if ($name === "" || $price <= 0) {
-    echo json_encode(["success" => false, "message" => "Invalid name or price"]);
+    echo json_encode([
+        "success" => 0,
+        "message" => "Invalid name or price"
+    ]);
     exit;
 }
 
 $stmt = $conn->prepare("INSERT INTO products (name, price, discount, tax) VALUES (?, ?, ?, ?)");
 
 if (!$stmt) {
-    echo json_encode(["success" => false, "message" => "Prepare failed: " . $conn->error]);
+    echo json_encode([
+        "success" => 0,
+        "message" => "Prepare failed: " . $conn->error
+    ]);
     exit;
 }
 
@@ -35,9 +41,15 @@ $stmt->bind_param("sddd", $name, $price, $discount, $tax);
 $success = $stmt->execute();
 
 if (!$success) {
-    echo json_encode(["success" => false, "message" => "Execute failed: " . $stmt->error]);
+    echo json_encode([
+        "success" => 0,
+        "message" => "Execute failed: " . $stmt->error
+    ]);
     exit;
 }
 
-echo json_encode(["success" => true]);
+echo json_encode([
+    "success" => 1,
+    "message" => "Product added successfully"
+]);
 ?>
