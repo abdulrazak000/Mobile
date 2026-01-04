@@ -23,7 +23,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
     if (name.isEmpty || price <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('أدخل اسم وسعر صحيح')),
+        const SnackBar(content: Text('enter valid name and price')),
       );
       return;
     }
@@ -34,7 +34,7 @@ class _AddProductPageState extends State<AddProductPage> {
       Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('فشل في إضافة المنتج')),
+        const SnackBar(content: Text('error in adding product')),
       );
     }
   }
