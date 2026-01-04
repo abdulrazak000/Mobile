@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'product.dart';
 
 class ProductService {
-  static const String baseUrl = "https://web-production-3c4af.up.railway.app/mobile_api/get_products.php";
+  static const String baseUrl = "https://web-production-3c4af.up.railway.app/get_products.php";
 
   Future<List<Product>> getProducts() async {
     try {
